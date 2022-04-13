@@ -19,7 +19,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   List<CategoryModel> categories = <CategoryModel>[];
   @override
   void initState() {
-    categories = getCategories();
+    // categories = getCategories();
     super.initState();
   }
 
@@ -74,32 +74,32 @@ class _DiscoverPageState extends State<DiscoverPage> {
           price: "₹ 36,77,878.31"),
     ];
 
-    // List<CategoryModel> categoryList = [
-    //   CategoryModel(
-    //       id: "1",
-    //       categoryName: "Automobile",
-    //       assetsImage: "assets/images/automobile.png"),
-    //   CategoryModel(
-    //       id: "2",
-    //       categoryName: "All News",
-    //       assetsImage: "assets/images/all_news.png"),
-    //   CategoryModel(
-    //       id: "3",
-    //       categoryName: "Trending",
-    //       assetsImage: "assets/images/trending.png"),
-    //   CategoryModel(
-    //       id: "4",
-    //       categoryName: "Bookmarks",
-    //       assetsImage: "assets/images/bookmark.png"),
-    //   CategoryModel(
-    //       id: "5",
-    //       categoryName: "Unread",
-    //       assetsImage: "assets/images/unread.png"),
-    //   CategoryModel(
-    //       id: "6",
-    //       categoryName: "Entertainment",
-    //       assetsImage: "assets/images/entertainment.png"),
-    // ];
+    List<CategoryModel> categoryList = [
+      CategoryModel(
+          id: "1",
+          categoryName: "Automobile",
+          assetsImage: "assets/images/automobile.png"),
+      CategoryModel(
+          id: "2",
+          categoryName: "All News",
+          assetsImage: "assets/images/all_news.png"),
+      CategoryModel(
+          id: "3",
+          categoryName: "Trending",
+          assetsImage: "assets/images/trending.png"),
+      CategoryModel(
+          id: "4",
+          categoryName: "Bookmarks",
+          assetsImage: "assets/images/bookmark.png"),
+      CategoryModel(
+          id: "5",
+          categoryName: "Unread",
+          assetsImage: "assets/images/unread.png"),
+      CategoryModel(
+          id: "6",
+          categoryName: "Entertainment",
+          assetsImage: "assets/images/entertainment.png"),
+    ];
 
     List<NotificationModel> notificationList = [
       NotificationModel(
@@ -415,12 +415,12 @@ class _DiscoverPageState extends State<DiscoverPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                margin: const EdgeInsets.only(left: 10),
+                margin:const EdgeInsets.only(left: 10),
                 width: 60,
                 height: 70,
                 color: Colors.white,
                 child: Image.asset(
-                   ,
+                   item.assetsImage,
                   fit: BoxFit.cover,
                 )),
             const SizedBox(
