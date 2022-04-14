@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -40,14 +39,14 @@ class _HomePageState extends State<HomePage> {
   List<NewsModel> newsList = [];
 
   void getNews() async {
-    var url = Uri.parse("https://news.thedigitalkranti.com/app/latest_news");
+    var url = Uri.parse("https://news.thedigitalkranti.com/new/v1/news");
     try {
       final response = await http.get(url);
       // log('List====>  ${response.statusCode}');
       // log('List====>  ${response.body}');
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
-        var _cryptoList = result['news_info'] as List;
+        var _cryptoList = result['data'] as List;
 
         setState(() {
           newsList.clear();
