@@ -1,11 +1,15 @@
+import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:inshorts_app/model/activity_model.dart';
-import 'package:inshorts_app/model/category_model.dart';
+import 'package:inshorts_app/model/categorylist_model.dart';
 import 'package:inshorts_app/model/coin_model.dart';
+import 'package:inshorts_app/model/news_model.dart';
 import 'package:inshorts_app/model/notification_model.dart';
-import 'package:inshorts_app/provider/category_data.dart';
+import 'package:inshorts_app/views/home_page.dart';
 import 'package:inshorts_app/views/setting_page.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -16,10 +20,68 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPageState extends State<DiscoverPage> {
-  List<CategoryModel> categories = <CategoryModel>[];
+  List colors = [Colors.white, Colors.green, Colors.blue];
+  Random random = Random();
+  var categoryId;
+  List<CategoryList> categories = [];
+
+  void getCategory() async {
+    var url = Uri.parse(
+        "https://news.thedigitalkranti.com/new/v1/news/news_category");
+    try {
+      final response = await http.get(url);
+      // log('List====>  ${response.statusCode}');
+      // log('List====>  ${response.body}');
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        var _categoriesList = result['data'] as List;
+
+        setState(() {
+          for (var element in _categoriesList) {
+            var temp = CategoryList();
+            temp = CategoryList.fromJson(element);
+            categories.add(temp);
+          }
+        });
+      }
+    } catch (e) {
+      // log(e.toString());
+    }
+  }
+
+  List<NewsModel> newsList = [];
+
+  void categoryDetails() async {
+    var url = Uri.parse(
+        "https://news.thedigitalkranti.com/new/v1/news/news_by_category_id");
+    var body = {
+      "category_id": categoryId,
+    };
+
+    try {
+      final response = await http.post(url, body: body);
+      // log('List====>  ${response.statusCode}');
+      // log('List====>  ${response.body}');
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        var _cryptoList = result['data'] as List;
+
+        setState(() {
+          for (var element in _cryptoList) {
+            var temp = NewsModel();
+            temp = NewsModel.fromJson(element);
+            newsList.add(temp);
+          }
+        });
+      }
+    } catch (e) {
+      // log(e.toString());
+    }
+  }
+
   @override
   void initState() {
-    // categories = getCategories();
+    getCategory();
     super.initState();
   }
 
@@ -72,33 +134,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
               "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Emblem.png",
           percentage: "0.2%",
           price: "₹ 36,77,878.31"),
-    ];
-
-    List<CategoryModel> categoryList = [
-      CategoryModel(
-          id: "1",
-          categoryName: "Automobile",
-          assetsImage: "assets/images/automobile.png"),
-      CategoryModel(
-          id: "2",
-          categoryName: "All News",
-          assetsImage: "assets/images/all_news.png"),
-      CategoryModel(
-          id: "3",
-          categoryName: "Trending",
-          assetsImage: "assets/images/trending.png"),
-      CategoryModel(
-          id: "4",
-          categoryName: "Bookmarks",
-          assetsImage: "assets/images/bookmark.png"),
-      CategoryModel(
-          id: "5",
-          categoryName: "Unread",
-          assetsImage: "assets/images/unread.png"),
-      CategoryModel(
-          id: "6",
-          categoryName: "Entertainment",
-          assetsImage: "assets/images/entertainment.png"),
     ];
 
     List<NotificationModel> notificationList = [
@@ -290,22 +325,33 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     }),
               ),
               const SizedBox(
-                height: 20,
+                height: 30,
               ),
+
+              //   Container(
+              //      width: screenWidth,
+              //     height: 100,
+              //     child: GridView.builder(
+              // gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              //       maxCrossAxisExtent:120,
+              //       childAspectRatio: 3/1 ,
+              //       crossAxisSpacing: 00,
+              //       mainAxisSpacing: 0),
+              // itemCount: categories.length,
+              // itemBuilder: (BuildContext ctx, index) {
+              //     return categorie(categories[index]);
+              // }),
+              //   ),
               Container(
-                // margin: const EdgeInsets.symmetric(horizontal: 10),
                 width: screenWidth,
-                height: 100,
+                height: 80,
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
-                      return categorie(categories[index]);
+                      return categorie(categories[index],index);
                     }),
-              ),
-              const SizedBox(
-                height: 30,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -406,29 +452,35 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }
 
-  Widget categorie(CategoryModel item) {
+  Widget categorie(CategoryList item, index) {
+    categoryId = item.newsCategoryId;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(
+                      description: newsList[index].description.toString(),
+                      image: newsList[index].image.toString(),
+                      slug: newsList[index].slug.toString(),
+                      title: newsList[index].title.toString(),
+                    )));
+      },
       child: Container(
         margin: const EdgeInsets.only(left: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                margin:const EdgeInsets.only(left: 10),
-                width: 60,
-                height: 70,
-                color: Colors.white,
-                child: Image.asset(
-                   item.assetsImage,
-                  fit: BoxFit.cover,
-                )),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
+              width: 160,
+              height: 50,
               margin: const EdgeInsets.only(left: 10),
-              child: Text(item.categoryName,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.primaries[Random().nextInt(colors.length)],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(item.name.toString(),
                   style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 14,

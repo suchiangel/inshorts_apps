@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:inshorts_app/model/news_model.dart';
@@ -17,7 +18,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  String image;
+  String title;
+  String slug;
+  String description;
+ HomePage({Key? key,required this.image,required this.description,required this.slug,required this.title}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,24 +54,16 @@ class _HomePageState extends State<HomePage> {
         var _cryptoList = result['data'] as List;
 
         setState(() {
-          newsList.clear();
-          var listdata = _cryptoList.map((e) => NewsModel.fromjson(e)).toList();
-          newsList.addAll(listdata);
-          // dataads = List.from(datas);
-          // // insert admob banner object in between the array list
-          // for (int index = 0; index <= 3; index++) {
-          //   var min = 1;
-          //   var rm = Random();
-          //   //generate a random number from 2 to 18 (+ 1)
-          //   var rannumpos = min + rm.nextInt(10);
-          //   //and add the banner ad to particular index of arraylist
-          //   dataads.insert(rannumpos, AdMobService.createBannerAd()..load());
-          // }
-          _loading = false;
+          for (var element in _cryptoList) {
+            var temp=NewsModel();
+            temp=NewsModel.fromJson(element);
+            newsList.add(temp);
+           }
+           _loading = false;
         });
       }
     } catch (e) {
-      // log(e.toString());
+      log(e.toString());
     }
   }
 
@@ -74,7 +71,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getNews();
-    datas = [];
+    // datas = [];
   }
 
   var image;
@@ -256,9 +253,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget newsWidget(NewsModel item) {
-    image = item.imageUrl;
+    image = item.image;
     title = item.title;
-    slugCtegory = item.slugCategory;
+    slugCtegory = item.slug;
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -272,7 +269,9 @@ class _HomePageState extends State<HomePage> {
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: CachedNetworkImage(
-                imageUrl: item.imageUrl,
+                imageUrl: widget.image == null
+                    ? "http://via.placeholder.com/640x360"
+                    : "${item.image}",
                 fit: BoxFit.cover,
               ),
             ),
@@ -280,7 +279,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              item.title,
+              "${widget.title}",
               style: const TextStyle(
                   color: Colors.black87,
                   fontSize: 16,
@@ -299,16 +298,20 @@ class _HomePageState extends State<HomePage> {
               });
             },
             child: Container(
-              height: screenHeight * 0.34,
+              height: screenHeight * 0.35,
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                item.description,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-                maxLines: 12,
+              child: Html(
+                data: widget.description == null
+                    ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
+                    : "${item.description}",
+                style: {
+                  "tr": Style(
+                    color:Colors.black87,
+                    fontSize: FontSize(15),
+                    fontWeight: FontWeight.w600
+                  )
+                }
+              
               ),
             ),
           ),
@@ -329,12 +332,12 @@ class _HomePageState extends State<HomePage> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const WebviewPage()));
+                  MaterialPageRoute(builder: (context) =>  WebviewPage(slugCategory: "${item.slug}",)));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 12),
               width: screenWidth,
-              height: 58,
+              height: 70,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: const [Color(0xFFF020024), Color(0xFFF03012e)],
@@ -347,27 +350,18 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: RichText(
-                  text: TextSpan(
-                      text: item.slugCategory,
+                child: 
+                   Text(
+                       "${widget.slug}",
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                       // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        TextSpan(
-                          text: "\nTap to read more",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ]),
+                     ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -392,8 +386,8 @@ class _HomePageState extends State<HomePage> {
   Widget customBottamNavigation() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const WebviewPage()));
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const WebviewPage()));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 0),

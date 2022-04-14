@@ -40,8 +40,9 @@ dependencies:
   share_plus: ^4.0.3
   google_mobile_ads: ^1.1.0
   path_provider: ^2.0.9
-  webview_flutter: ^3.0.1
+  webview_flutter:
   google_fonts:
+  flutter_html: ^2.2.1
 
 dev_dependencies:
   flutter_test:

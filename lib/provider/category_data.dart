@@ -1,14 +1,16 @@
-import 'package:inshorts_app/model/category_model.dart';
+// import 'package:inshorts_app/model/category_model.dart';
+// import 'package:inshorts_app/model/categorylist_model.dart';
 
-// List<CategoryModel> getCategories(){
-//     List<CategoryModel> category = <CategoryModel>[];
-//   CategoryModel categoryModel = CategoryModel();
+// List<CategoryListModel> getCategories(){
+//     List<CategoryListModel> category = <CategoryListModel>[];
+//   CategoryListModel categoryModel = CategoryListModel();
 
 //    //1
-//   categoryModel.categoryName = "Automobile";
-//   categoryModel.assetsImage = "assets/images/automobile.png";
-//    category.add(categoryModel);
-//     categoryModel = CategoryModel();
+//    CategoryListModel.
+//   CategoryListModel.name = "Automobile";
+//   CategoryListModel.assetsImage = "assets/images/automobile.png";
+//    category.add(CategoryListModel);
+//     categoryModel = CategoryListModel();
 
 //    //2
 //   categoryModel.categoryName = "All News";
