@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:inshorts_app/helper/api_helper.dart';
 import 'package:inshorts_app/model/news_model.dart';
 import 'package:inshorts_app/services/ad_mobile_services.dart';
 import 'package:inshorts_app/views/discover.dart';
@@ -17,59 +18,56 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class HomePage extends StatefulWidget {
+class CategoryNews extends StatefulWidget {
+ final String categoryId;
 
-
- HomePage({Key? key,}) : super(key: key);
+ CategoryNews({Key? key,required this.categoryId}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CategoryNews> createState() => _CategoryNewsState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CategoryNewsState extends State<CategoryNews> {
   late List<String> datas;
   late List<Object> dataads;
 
   AdMobService admobServices = AdMobService();
 
   bool _loading = true;
-  bool isloaded = false;
   bool _isShowfooter = false;
 
   double screenWidth = 0;
   double screenHeight = 0;
   int count = 0;
-  List<NewsModel> newsList = [];
+  List<NewsModel> categoryDetailsList = [];
 
-  void getNews() async {
-    var url = Uri.parse("https://news.thedigitalkranti.com/new/v1/news");
-    try {
-      final response = await http.get(url);
-      // log('List====>  ${response.statusCode}');
-      // log('List====>  ${response.body}');
-      if (response.statusCode == 200) {
-        var result = jsonDecode(response.body);
-        var _cryptoList = result['data'] as List;
+  categoryDetails() async {
+   
+      var url = "https://news.thedigitalkranti.com/new/v1/news/news_by_category_id";
 
+      var data = {
+       
+   "category_id": widget.categoryId.toString(),
+     
+      };
+
+      var response = await APIHelper.apiPostRequest(url, data);
+      var result = jsonDecode(response);
+      if (result['status'] == true || result == null) {
+        categoryDetailsList.clear();
+        var _list = result['data'] as List;
+        var _listData = _list.map((e) => NewsModel.fromJson(e)).toList();
         setState(() {
-          for (var element in _cryptoList) {
-            var temp=NewsModel();
-            temp=NewsModel.fromJson(element);
-            newsList.add(temp);
-           }
-           _loading = false;
+          categoryDetailsList.addAll(_listData);
+         _loading = false;
         });
-      }
-    } catch (e) {
-      log(e.toString());
-    }
+      } 
+   
   }
-
   @override
   void initState() {
     super.initState();
-    getNews();
-    // datas = [];
+    categoryDetails(); 
   }
 
   var image;
@@ -219,19 +217,19 @@ class _HomePageState extends State<HomePage> {
                   height: screenHeight / 1.1,
                   width: screenWidth,
                   child: CarouselSlider.builder(
-                    itemCount: newsList.length,
+                    itemCount: categoryDetailsList.length,
                     itemBuilder:
                         (BuildContext context, int index, int pageViewIndex) {
                       if (count < 4) {
                         count++;
                         log('Count=:::>>> $count');
-                        return newsWidget(newsList[index]);
+                        return newsWidget(categoryDetailsList[index]);
                       } else {
                         count = 0;
                         log('Count======>>> $count');
                         _showInterstitialAd();
                         _createInterstitialAd();
-                        return newsWidget(newsList[index]);
+                        return newsWidget(categoryDetailsList[index]);
                         // return bannerAdWidget();
                       }
                     },
@@ -303,10 +301,10 @@ class _HomePageState extends State<HomePage> {
                     ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
                     : "${item.description}",
                 style: {
-                  "tr": Style(
+                  "body": Style(
                     color:Colors.black87,
-                    fontSize: FontSize(15),
-                    fontWeight: FontWeight.w600
+                    fontSize: FontSize(20),
+                    fontWeight: FontWeight.w500
                   )
                 }
               
@@ -381,48 +379,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget customBottamNavigation() {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => const WebviewPage()));
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 0),
-        width: screenWidth,
-        height: 60,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: const [Color(0xFFF020024), Color(0xFFF03012e)],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-            stops: [0.0, 0.8],
-            tileMode: TileMode.clamp,
-          ),
-        ),
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: RichText(
-            text: TextSpan(
-                text: slugCtegory,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500),
-                children: const [
-                  TextSpan(
-                    text: "\nTap to read more",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                  )
-                ]),
-          ),
-        ),
-      ),
-    );
-  }
+ 
 
   InterstitialAd? _interstitialAd;
   void _showInterstitialAd() {

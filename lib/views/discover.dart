@@ -4,11 +4,13 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:inshorts_app/helper/api_helper.dart';
 import 'package:inshorts_app/model/activity_model.dart';
 import 'package:inshorts_app/model/categorylist_model.dart';
 import 'package:inshorts_app/model/coin_model.dart';
 import 'package:inshorts_app/model/news_model.dart';
 import 'package:inshorts_app/model/notification_model.dart';
+import 'package:inshorts_app/views/category_detail.dart';
 import 'package:inshorts_app/views/home_page.dart';
 import 'package:inshorts_app/views/setting_page.dart';
 
@@ -25,11 +27,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
   var categoryId;
   List<CategoryList> categories = [];
 
-  void getCategory() async {
+  Future getCategory() async {
     var url = Uri.parse(
         "https://news.thedigitalkranti.com/new/v1/news/news_category");
     try {
-      final response = await http.get(url);
+      var response = await http.get(url);
       // log('List====>  ${response.statusCode}');
       // log('List====>  ${response.body}');
       if (response.statusCode == 200) {
@@ -41,36 +43,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
             var temp = CategoryList();
             temp = CategoryList.fromJson(element);
             categories.add(temp);
-          }
-        });
-      }
-    } catch (e) {
-      // log(e.toString());
-    }
-  }
-
-  List<NewsModel> newsList = [];
-
-  void categoryDetails() async {
-    var url = Uri.parse(
-        "https://news.thedigitalkranti.com/new/v1/news/news_by_category_id");
-    var body = {
-      "category_id": categoryId,
-    };
-
-    try {
-      final response = await http.post(url, body: body);
-      // log('List====>  ${response.statusCode}');
-      // log('List====>  ${response.body}');
-      if (response.statusCode == 200) {
-        var result = jsonDecode(response.body);
-        var _cryptoList = result['data'] as List;
-
-        setState(() {
-          for (var element in _cryptoList) {
-            var temp = NewsModel();
-            temp = NewsModel.fromJson(element);
-            newsList.add(temp);
           }
         });
       }
@@ -327,21 +299,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
               const SizedBox(
                 height: 30,
               ),
-
-              //   Container(
-              //      width: screenWidth,
-              //     height: 100,
-              //     child: GridView.builder(
-              // gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              //       maxCrossAxisExtent:120,
-              //       childAspectRatio: 3/1 ,
-              //       crossAxisSpacing: 00,
-              //       mainAxisSpacing: 0),
-              // itemCount: categories.length,
-              // itemBuilder: (BuildContext ctx, index) {
-              //     return categorie(categories[index]);
-              // }),
-              //   ),
               Container(
                 width: screenWidth,
                 height: 80,
@@ -350,7 +307,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
-                      return categorie(categories[index],index);
+                      return categorie(
+                        categories[index],
+                    
+                      );
                     }),
               ),
               Container(
@@ -452,18 +412,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }
 
-  Widget categorie(CategoryList item, index) {
-    categoryId = item.newsCategoryId;
+  Widget categorie(CategoryList item) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage(
-                      description: newsList[index].description.toString(),
-                      image: newsList[index].image.toString(),
-                      slug: newsList[index].slug.toString(),
-                      title: newsList[index].title.toString(),
+                builder: (context) => CategoryNews(
+                      categoryId: item.newsCategoryId.toString(),
                     )));
       },
       child: Container(

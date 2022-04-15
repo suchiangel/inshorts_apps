@@ -1,8 +1,4 @@
 
-
- 
-
-
 class NewsModel {
   String? newsId;
   String? title;
