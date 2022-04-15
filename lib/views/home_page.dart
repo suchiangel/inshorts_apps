@@ -18,9 +18,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
-
-
- HomePage({Key? key,}) : super(key: key);
+  HomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -53,11 +53,11 @@ class _HomePageState extends State<HomePage> {
 
         setState(() {
           for (var element in _cryptoList) {
-            var temp=NewsModel();
-            temp=NewsModel.fromJson(element);
+            var temp = NewsModel();
+            temp = NewsModel.fromJson(element);
             newsList.add(temp);
-           }
-           _loading = false;
+          }
+          _loading = false;
         });
       }
     } catch (e) {
@@ -179,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                     File(path).writeAsBytesSync(bytes);
                     await Share.shareFiles([path],
                         text:
-                            '${title} "\n${image}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
+                            '${title} "\n${slugCtegory}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
                     // Share.share(
                     //     "${widget.title}" + "\nअ
                     //भी डाउनलोड करे " + playStoreUrl + "");
@@ -229,10 +229,10 @@ class _HomePageState extends State<HomePage> {
                       } else {
                         count = 0;
                         log('Count======>>> $count');
-                        _showInterstitialAd();
-                        _createInterstitialAd();
+                        // _showInterstitialAd();
+                        // _createInterstitialAd();
+                        bannerAdWidget();
                         return newsWidget(newsList[index]);
-                        // return bannerAdWidget();
                       }
                     },
                     options: CarouselOptions(
@@ -275,6 +275,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
+            color: Colors.amber,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               "${item.title}",
@@ -286,32 +287,20 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // bannerAdWidget(),
-          SizedBox(
-            height: 5,
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                _isShowfooter = !_isShowfooter;
-              });
-            },
-            child: Container(
-              height: screenHeight * 0.35,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Html(
+          Container(
+            color: Colors.pink,
+            height: screenHeight * 0.35,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Html(
                 data: item.description == null
                     ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
                     : "${item.description}",
                 style: {
-                  "tr": Style(
-                    color:Colors.black87,
-                    fontSize: FontSize(15),
-                    fontWeight: FontWeight.w600
-                  )
-                }
-              
-              ),
-            ),
+                  "body": Style(
+                      color: Colors.black87,
+                      fontSize: FontSize(16),
+                      fontWeight: FontWeight.w500)
+                }),
           ),
           // Container(
           //   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -325,12 +314,16 @@ class _HomePageState extends State<HomePage> {
           //   ),
           // ),
           SizedBox(
-            height: 20,
+            height: 2,
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) =>  WebviewPage(slugCategory: "${item.slug}",)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebviewPage(
+                            slugCategory: "${item.slug}",
+                          )));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 12),
@@ -348,18 +341,17 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: 
-                   Text(
-                       "${item.slug}",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                      // ignore: prefer_const_literals_to_create_immutables
-                     ),
+                child: Text(
+                  "${item.slug}",
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                  // ignore: prefer_const_literals_to_create_immutables
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
