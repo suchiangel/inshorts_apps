@@ -213,10 +213,10 @@ class _HomePageState extends State<HomePage> {
             )
           : ListView(
               // shrinkWrap: true,
-              // physics: const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 Container(
-                  height: screenHeight / 1.14,
+                  height: screenHeight,
                   width: screenWidth,
                   child: CarouselSlider.builder(
                     
@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                       enlargeCenterPage: false,
                       viewportFraction:10,
                       aspectRatio: 2.0,
-                      initialPage:2,
+                      initialPage:1,
                     ),
                   ),
                 ),
@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             width: screenWidth,
-            height: screenHeight * 0.3,
+            height: screenHeight * 0.36,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -291,6 +291,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // bannerAdWidget(),
+          SizedBox(height:5,),
           InkWell(
             onTap: (){
                setState(() {
@@ -298,7 +299,7 @@ class _HomePageState extends State<HomePage> {
               });
             },
             child: Container(
-              height: screenHeight * 0.40,
+              height: screenHeight * 0.42,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Html(
                   data: item.description == null
@@ -325,7 +326,6 @@ class _HomePageState extends State<HomePage> {
                           )));
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
               width: screenWidth,
               height: 60,
               decoration: BoxDecoration(
