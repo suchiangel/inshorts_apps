@@ -208,11 +208,11 @@ class _CategoryNewsState extends State<CategoryNews> {
               ),
             )
           : ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              // shrinkWrap: true,
+              // physics: const NeverScrollableScrollPhysics(),
               children: [
                 Container(
-                  height: screenHeight / 1.14,
+                  height: screenHeight,
                   width: screenWidth,
                   child: CarouselSlider.builder(
                     itemCount: categoryDetailsList.length,
@@ -258,7 +258,7 @@ class _CategoryNewsState extends State<CategoryNews> {
         children: [
           Container(
             width: screenWidth,
-            height: screenHeight * 0.3,
+            height: screenHeight * 0.36,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -321,7 +321,6 @@ class _CategoryNewsState extends State<CategoryNews> {
                           )));
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
               width: screenWidth,
               height: 60,
               decoration: BoxDecoration(

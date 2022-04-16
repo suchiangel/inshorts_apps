@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
-    
   static String get interstitialAdUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-4471645545827285/7703250106';
@@ -18,7 +17,7 @@ class AdMobService {
   late InterstitialAd _interstitialAd;
 
   static get intrestitalAdUnitId => null;
-   double screenWidth = 0;
+  double screenWidth = 0;
   double screenHeight = 0;
 
   static initialize() {
@@ -27,10 +26,12 @@ class AdMobService {
     }
   }
 
-   static BannerAd createBannerAd(double width, double height) {
-    
+  static BannerAd createBannerAd(double width, double height) {
     BannerAd ad = BannerAd(
-      size: AdSize(height:height.toInt(), width:width.toInt(),),
+      size: AdSize(
+        height: height.toInt(),
+        width: width.toInt(),
+      ),
       adUnitId: bannerAdUnitId,
       request: AdRequest(),
       listener: BannerAdListener(
@@ -50,6 +51,8 @@ class AdMobService {
     );
     return ad;
   }
+
+ 
 
   Future<void> interAd() async {
     return await InterstitialAd.load(
