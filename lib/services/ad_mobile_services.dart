@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
+    
   static String get interstitialAdUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-4471645545827285/7703250106';
@@ -16,6 +18,8 @@ class AdMobService {
   late InterstitialAd _interstitialAd;
 
   static get intrestitalAdUnitId => null;
+   double screenWidth = 0;
+  double screenHeight = 0;
 
   static initialize() {
     if (MobileAds.instance == null) {
@@ -23,32 +27,10 @@ class AdMobService {
     }
   }
 
-  // static BannerAd createBannerAds() {
-  //   BannerAd ad =  BannerAd(
-  //     size: AdSize.banner,
-  //     adUnitId: intrestitalAdUnitId,
-  //     request: AdRequest(),
-  //     listener: BannerAdListener(
-  //       onAdLoaded: (Ad ad) => log('Ad Loaded'),
-  //       onAdFailedToLoad: (Ad ad, LoadAdError error) {
-  //         // Dispose the ad here to free resources.
-  //         ad.dispose();
-  //         log('Ad failed to load: $error');
-  //       },
-  //       // Called when an ad opens an overlay that covers the screen.
-  //       onAdOpened: (Ad ad) => log('Ad opened.'),
-  //       // Called when an ad removes an overlay that covers the screen.
-  //       onAdClosed: (Ad ad) => log('Ad closed.'),
-  //       // Called when an impression occurs on the ad.
-  //       onAdImpression: (Ad ad) => log('Ad impression.'),
-  //     ),
-  //   );
-  //   return ad;
-  // }
-
-  static BannerAd createBannerAd() {
+   static BannerAd createBannerAd(double width, double height) {
+    
     BannerAd ad = BannerAd(
-      size: AdSize.mediumRectangle,
+      size: AdSize(height:height.toInt(), width:width.toInt(),),
       adUnitId: bannerAdUnitId,
       request: AdRequest(),
       listener: BannerAdListener(

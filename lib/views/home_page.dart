@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
+      appBar: _isShowfooter ? AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leadingWidth: 10,
@@ -203,8 +203,8 @@ class _HomePageState extends State<HomePage> {
           )
         ],
         // centerTitle: true,
-      ),
-      // : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
+      )
+      : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
       body: _loading
           ? Center(
               child: Container(
@@ -212,36 +212,39 @@ class _HomePageState extends State<HomePage> {
               ),
             )
           : ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              // shrinkWrap: true,
+              // physics: const NeverScrollableScrollPhysics(),
               children: [
                 Container(
-                  height: screenHeight / 1.1,
+                  height: screenHeight / 1.14,
                   width: screenWidth,
                   child: CarouselSlider.builder(
+                    
                     itemCount: newsList.length,
                     itemBuilder:
                         (BuildContext context, int index, int pageViewIndex) {
                       if (count < 4) {
                         count++;
                         log('Count=:::>>> $count');
-                        return newsWidget(newsList[index]);
+                          bannerAdWidget();
+                        return  newsWidget(newsList[index]);
                       } else {
                         count = 0;
                         log('Count======>>> $count');
                         // _showInterstitialAd();
                         // _createInterstitialAd();
-                        bannerAdWidget();
-                        return newsWidget(newsList[index]);
+                        return bannerAdWidget();
                       }
                     },
                     options: CarouselOptions(
+                    // enableInfiniteScroll: false,
+                      // scrollPhysics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       autoPlay: false,
                       enlargeCenterPage: false,
-                      viewportFraction: 11,
+                      viewportFraction:10,
                       aspectRatio: 2.0,
-                      initialPage: 2,
+                      initialPage:2,
                     ),
                   ),
                 ),
@@ -262,7 +265,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             width: screenWidth,
-            height: 230,
+            height: screenHeight * 0.3,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -275,7 +278,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            color: Colors.amber,
+            width: screenWidth,
+            height: screenHeight * 0.09,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               "${item.title}",
@@ -287,35 +291,30 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // bannerAdWidget(),
-          Container(
-            color: Colors.pink,
-            height: screenHeight * 0.35,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Html(
-                data: item.description == null
-                    ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
-                    : "${item.description}",
-                style: {
-                  "body": Style(
+          InkWell(
+            onTap: (){
+               setState(() {
+                _isShowfooter = !_isShowfooter;
+              });
+            },
+            child: Container(
+              height: screenHeight * 0.40,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Html(
+                  data: item.description == null
+                      ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
+                      : "${item.description}",
+                  style: {
+                    "body": Style(
                       color: Colors.black87,
                       fontSize: FontSize(16),
-                      fontWeight: FontWeight.w500)
-                }),
+                      fontWeight: FontWeight.w500,
+                      maxLines: 12,
+                    )
+                  }),
+            ),
           ),
-          // Container(
-          //   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          //   child: Text(
-          //     "",
-          //     style: TextStyle(
-          //         color: Colors.grey[400],
-          //         fontSize: 10,
-          //         fontWeight: FontWeight.w500),
-          //     maxLines: 13,
-          //   ),
-          // ),
-          SizedBox(
-            height: 2,
-          ),
+
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -326,9 +325,9 @@ class _HomePageState extends State<HomePage> {
                           )));
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: 5),
               width: screenWidth,
-              height: 70,
+              height: 60,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: const [Color(0xFFF020024), Color(0xFFF03012e)],
@@ -339,15 +338,19 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(
-                  "${item.slug}",
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                  // ignore: prefer_const_literals_to_create_immutables
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () {
+                    "${item.slug}";
+                  },
+                  child: Text(
+                    "Tap to read more",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                    // ignore: prefer_const_literals_to_create_immutables
+                  ),
                 ),
               ),
             ),
@@ -358,18 +361,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget bannerAdWidget() {
-    return Container(
-      child: AdWidget(
-        ad: AdMobService.createBannerAd()..load(),
-        key: UniqueKey(),
+    return Center(
+      child: Container(
+      
+        child: AdWidget(
+          ad: AdMobService.createBannerAd(screenHeight,screenWidth)..load(),
+          key: UniqueKey(),
+        ),
+        width: screenWidth,
+        height: screenHeight,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            border: Border(
+          bottom: BorderSide(width: .1, color: Colors.black),
+        )),
       ),
-      width: screenWidth,
-      height: screenHeight,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          border: Border(
-        bottom: BorderSide(width: .1, color: Colors.black),
-      )),
     );
   }
 

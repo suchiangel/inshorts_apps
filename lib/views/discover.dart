@@ -197,23 +197,28 @@ class _DiscoverPageState extends State<DiscoverPage> {
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: const [
-                Text(
-                  "My Feed",
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.blue,
-                  size: 18,
-                ),
-              ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,MaterialPageRoute(builder:(context)=> HomePage()));
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: const [
+                  Text(
+                    "My Feed",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.blue,
+                    size: 18,
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -309,7 +314,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     itemBuilder: (context, index) {
                       return categorie(
                         categories[index],
-                    
                       );
                     }),
               ),

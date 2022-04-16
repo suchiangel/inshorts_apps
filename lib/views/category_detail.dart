@@ -19,9 +19,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CategoryNews extends StatefulWidget {
- final String categoryId;
+  final String categoryId;
 
- CategoryNews({Key? key,required this.categoryId}) : super(key: key);
+  CategoryNews({Key? key, required this.categoryId}) : super(key: key);
 
   @override
   State<CategoryNews> createState() => _CategoryNewsState();
@@ -42,32 +42,30 @@ class _CategoryNewsState extends State<CategoryNews> {
   List<NewsModel> categoryDetailsList = [];
 
   categoryDetails() async {
-   
-      var url = "https://news.thedigitalkranti.com/new/v1/news/news_by_category_id";
+    var url =
+        "https://news.thedigitalkranti.com/new/v1/news/news_by_category_id";
 
-      var data = {
-       
-   "category_id": widget.categoryId.toString(),
-     
-      };
+    var data = {
+      "category_id": widget.categoryId.toString(),
+    };
 
-      var response = await APIHelper.apiPostRequest(url, data);
-      var result = jsonDecode(response);
-      if (result['status'] == true || result == null) {
-        categoryDetailsList.clear();
-        var _list = result['data'] as List;
-        var _listData = _list.map((e) => NewsModel.fromJson(e)).toList();
-        setState(() {
-          categoryDetailsList.addAll(_listData);
-         _loading = false;
-        });
-      } 
-   
+    var response = await APIHelper.apiPostRequest(url, data);
+    var result = jsonDecode(response);
+    if (result['status'] == true || result == null) {
+      categoryDetailsList.clear();
+      var _list = result['data'] as List;
+      var _listData = _list.map((e) => NewsModel.fromJson(e)).toList();
+      setState(() {
+        categoryDetailsList.addAll(_listData);
+        _loading = false;
+      });
+    }
   }
+
   @override
   void initState() {
     super.initState();
-    categoryDetails(); 
+    categoryDetails();
   }
 
   var image;
@@ -81,7 +79,7 @@ class _CategoryNewsState extends State<CategoryNews> {
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
+      appBar: _isShowfooter ? AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leadingWidth: 10,
@@ -201,8 +199,8 @@ class _CategoryNewsState extends State<CategoryNews> {
           )
         ],
         // centerTitle: true,
-      ),
-      // : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
+      )
+      : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
       body: _loading
           ? Center(
               child: Container(
@@ -214,7 +212,7 @@ class _CategoryNewsState extends State<CategoryNews> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 Container(
-                  height: screenHeight / 1.1,
+                  height: screenHeight / 1.14,
                   width: screenWidth,
                   child: CarouselSlider.builder(
                     itemCount: categoryDetailsList.length,
@@ -227,9 +225,9 @@ class _CategoryNewsState extends State<CategoryNews> {
                       } else {
                         count = 0;
                         log('Count======>>> $count');
-                        _showInterstitialAd();
-                        _createInterstitialAd();
-                        return newsWidget(categoryDetailsList[index]);
+                        // _showInterstitialAd();
+                        // _createInterstitialAd();
+                        return bannerAdWidget();
                         // return bannerAdWidget();
                       }
                     },
@@ -260,7 +258,7 @@ class _CategoryNewsState extends State<CategoryNews> {
         children: [
           Container(
             width: screenWidth,
-            height: 230,
+            height: screenHeight * 0.3,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -273,6 +271,8 @@ class _CategoryNewsState extends State<CategoryNews> {
             ),
           ),
           Container(
+            width: screenWidth,
+            height: screenHeight * 0.09,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               "${item.title}",
@@ -294,46 +294,36 @@ class _CategoryNewsState extends State<CategoryNews> {
               });
             },
             child: Container(
-              height: screenHeight * 0.35,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              height: screenHeight * 0.40,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
               child: Html(
                 data: item.description == null
                     ? "नोएडा (Noida News) में लगातार कोरोना (Corona) का कहर दिख रहा है। अभी हाल ही में नोएडा (Noida) के स्कूल में बच्चें कोरोना से संक्रमित पाए गए थे। जिस कारण वश स्कूल बंद किये गए थे। तो वहीं अब 32 छात्र और शिक्षक के रूप में नए मामले सामने आए हैं। जिसके बाद से स्वास्थ्य विभाग (Noida Health Department) भी अलर्ट हो गया है। साथ ही लोगों में एक बार फिर कोरोना को लेकर भय पैदा हो गया है"
                     : "${item.description}",
                 style: {
                   "body": Style(
-                    color:Colors.black87,
-                    fontSize: FontSize(20),
-                    fontWeight: FontWeight.w500
-                  )
-                }
-              
+                    color: Colors.black87,
+                    fontSize: FontSize(16),
+                    fontWeight: FontWeight.w500,
+                    maxLines: 12,
+                  ),
+                },
               ),
             ),
           ),
-          // Container(
-          //   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          //   child: Text(
-          //     "",
-          //     style: TextStyle(
-          //         color: Colors.grey[400],
-          //         fontSize: 10,
-          //         fontWeight: FontWeight.w500),
-          //     maxLines: 13,
-          //   ),
-          // ),
-          SizedBox(
-            height: 20,
-          ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) =>  WebviewPage(slugCategory: "${item.slug}",)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WebviewPage(
+                            slugCategory: "${item.slug}",
+                          )));
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: 5),
               width: screenWidth,
-              height: 70,
+              height: 60,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: const [Color(0xFFF020024), Color(0xFFF03012e)],
@@ -344,20 +334,23 @@ class _CategoryNewsState extends State<CategoryNews> {
                 ),
               ),
               child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: 
-                   Text(
-                       "${item.slug}",
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                      // ignore: prefer_const_literals_to_create_immutables
-                     ),
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () {
+                    "${item.slug}";
+                  },
+                  child: Text(
+                    "Tap to read more",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                    // ignore: prefer_const_literals_to_create_immutables
+                  ),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
@@ -366,7 +359,7 @@ class _CategoryNewsState extends State<CategoryNews> {
   Widget bannerAdWidget() {
     return Container(
       child: AdWidget(
-        ad: AdMobService.createBannerAd()..load(),
+        ad: AdMobService.createBannerAd(screenWidth,screenHeight)..load(),
         key: UniqueKey(),
       ),
       width: screenWidth,
@@ -378,8 +371,6 @@ class _CategoryNewsState extends State<CategoryNews> {
       )),
     );
   }
-
- 
 
   InterstitialAd? _interstitialAd;
   void _showInterstitialAd() {
