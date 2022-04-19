@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -210,38 +209,33 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               ),
             )
-          : Column(
-              children: [
-                Stack(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: screenWidth,
-                        height: screenHeight,
-                        child: PageView.builder(
-                          // scrollBehavior: ScrollBehavior(),
-                          itemCount: newsList.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (BuildContext context, int index) {
-                            if (count < 4) {
-                              count++;
-                              log('Count=:::>>> $count');
-                              return newsWidget(newsList[index]);
-                            } else {
-                              count = 0;
-                              log('Count======>>> $count');
-                              // _showInterstitialAd();
-                              // _createInterstitialAd();
-                              return bannerAdWidget();
-                              // return bannerAdWidget();
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          : Container(
+              width: screenWidth,
+              height: screenHeight,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    // scrollBehavior: ScrollBehavior(),
+                    itemCount: newsList.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (count < 4) {
+                        count++;
+                        log('Count=:::>>> $count');
+                        return newsWidget(newsList[index]);
+                      } else {
+                        count = 0;
+                        log('Count======>>> $count');
+                        // _showInterstitialAd();
+                        // _createInterstitialAd();
+                        return bannerAdWidget();
+                      }
+                    },
+                  ),
+                  Positioned(
+                      child: _isShowfooter ? customAppbar() : Container())
+                ],
+              ),
             ),
       // bottomNavigationBar: customBottamBar(),
     );
@@ -291,7 +285,7 @@ class _HomePageState extends State<HomePage> {
             });
           },
           child: Container(
-            height: screenHeight * 0.40,
+            height: screenHeight * 0.43,
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: Html(
                 data: item.description == null
@@ -308,7 +302,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(
-          height: 25,
+          height: 30,
         ),
 
         GestureDetector(
@@ -413,71 +407,113 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget customAppbar() {
-    return ListTile(
-      leading: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(FontAwesomeIcons.anglesLeft),
-          Text(
-            "Discover",
-            style: TextStyle(
-                color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w500),
-          )
-        ],
-      ),
-      title: Column(
+    return Container(
+      height: 80,
+      width: screenWidth,
+      color: Colors.white,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "My Feed",
-            style: TextStyle(
-                color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
           Container(
-            width: 30,
-            height: 3,
-            color: Colors.blue,
-          )
-        ],
-      ),
-      trailing: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            onPressed: () async {
-              final imageUrl = '${image}';
-              final uri = Uri.parse(imageUrl);
-              final response = await http.get(uri);
-              final bytes = response.bodyBytes;
-              final temp = await getTemporaryDirectory();
-              final path = '${temp.path}/image.jpg';
-              log('IMAhgsfds===>   $path');
-              log(imageUrl);
-              File(path).writeAsBytesSync(bytes);
-              await Share.shareFiles([path],
-                  text:
-                      '${title} "\n${slugCtegory}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
-              // Share.share(
-              //     "${widget.title}" + "\nअ
-              //भी डाउनलोड करे " + playStoreUrl + "");
-            },
-            icon: Icon(
-              FontAwesomeIcons.shareNodes,
-              color: Colors.blue,
-              size: 20,
+            padding: EdgeInsets.only(top: 17),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DiscoverPage()));
+                  },
+                  icon: Icon(
+                    FontAwesomeIcons.chevronLeft,
+                    size: 18,
+                    color: Colors.blue,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DiscoverPage()));
+                  },
+                  child: Text(
+                    "Discover",
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 60, top: 10),
+                  child: Column(
+                    children: [
+                      Text(
+                        "My Feed",
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 30,
+                        height: 3,
+                        color: Colors.blue,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 70, top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          final imageUrl = '${image}';
+                          final uri = Uri.parse(imageUrl);
+                          final response = await http.get(uri);
+                          final bytes = response.bodyBytes;
+                          final temp = await getTemporaryDirectory();
+                          final path = '${temp.path}/image.jpg';
+                          log('IMAhgsfds===>   $path');
+                          log(imageUrl);
+                          File(path).writeAsBytesSync(bytes);
+                          await Share.shareFiles([path],
+                              text:
+                                  '${title} "\n${slugCtegory}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
+                          // Share.share(
+                          //     "${widget.title}" + "\nअ
+                          //भी डाउनलोड करे " + playStoreUrl + "");
+                        },
+                        icon: Icon(
+                          FontAwesomeIcons.shareNodes,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        FontAwesomeIcons.bookmark,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Icon(
-            FontAwesomeIcons.bookmark,
-            color: Colors.blue,
-            size: 20,
           ),
         ],
       ),

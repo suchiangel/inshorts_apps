@@ -9,7 +9,7 @@ class AdMobService {
       : 'ca-app-pub-4471645545827285/7703250106';
   static String get bannerAdUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-4471645545827285/3774918854';
+      : 'ca-app-pub-3940256099942544/6300978111';
 
   int num_attempot_load = 0;
   bool _isRewardedAdReady = false;
@@ -51,8 +51,6 @@ class AdMobService {
     );
     return ad;
   }
-
- 
 
   Future<void> interAd() async {
     return await InterstitialAd.load(
