@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:inshorts_app/model/news_model.dart';
 import 'package:inshorts_app/services/ad_mobile_services.dart';
+import 'package:inshorts_app/views/bookmark.dart';
 import 'package:inshorts_app/views/discover.dart';
 import 'package:inshorts_app/views/webview.dart';
 import 'package:http/http.dart' as http;
@@ -80,129 +81,6 @@ class _HomePageState extends State<HomePage> {
     int _currentPosition = 1;
     return Scaffold(
       extendBody: true,
-      // appBar: _isShowfooter
-      //     ? AppBar(
-      //         backgroundColor: Colors.white,
-      //         elevation: 0,
-      //         leadingWidth: 10,
-      //         leading: Container(
-      //             margin: const EdgeInsets.only(left: 3.0),
-      //             width: 150,
-      //             height: screenHeight,
-      //             child: IconButton(
-      //               onPressed: () {
-      //                 Navigator.push(
-      //                     context,
-      //                     MaterialPageRoute(
-      //                         builder: (context) => const DiscoverPage()));
-      //               },
-      //               icon: const Icon(
-      //                 Icons.arrow_back_ios,
-      //                 size: 18,
-      //                 color: Colors.blue,
-      //               ),
-      //             )),
-      //         automaticallyImplyLeading: false,
-      //         title: Padding(
-      //           padding: const EdgeInsets.only(right: 20.0),
-      //           child: Container(
-      //             margin: const EdgeInsets.only(
-      //               right: 10,
-      //             ),
-      //             width: screenWidth,
-      //             child: Row(
-      //               children: [
-      //                 GestureDetector(
-      //                   onTap: () {
-      //                     Navigator.push(
-      //                         context,
-      //                         MaterialPageRoute(
-      //                             builder: (context) => const DiscoverPage()));
-      //                   },
-      //                   child: Container(
-      //                     child: const Text(
-      //                       "Discover",
-      //                       style: TextStyle(
-      //                         color: Colors.black87,
-      //                         fontSize: 15,
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ),
-      //                 Container(
-      //                   alignment: Alignment.center,
-      //                   margin: const EdgeInsets.only(left: 65),
-      //                   child: Column(
-      //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //                     crossAxisAlignment: CrossAxisAlignment.center,
-      //                     children: [
-      //                       const Text(
-      //                         "My Feed",
-      //                         style: TextStyle(
-      //                             color: Colors.black87,
-      //                             fontSize: 15,
-      //                             fontWeight: FontWeight.w500),
-      //                       ),
-      //                       const SizedBox(
-      //                         height: 5,
-      //                       ),
-      //                       Container(
-      //                         width: 30,
-      //                         height: 3,
-      //                         color: Colors.blue,
-      //                       )
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ),
-      //         actions: [
-      //           Container(
-      //             margin: const EdgeInsets.symmetric(horizontal: 15),
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //               children: [
-      //                 IconButton(
-      //                   onPressed: () async {
-      //                     final imageUrl = '${image}';
-      //                     final uri = Uri.parse(imageUrl);
-      //                     final response = await http.get(uri);
-      //                     final bytes = response.bodyBytes;
-      //                     final temp = await getTemporaryDirectory();
-      //                     final path = '${temp.path}/image.jpg';
-      //                     log('IMAhgsfds===>   $path');
-      //                     log(imageUrl);
-      //                     File(path).writeAsBytesSync(bytes);
-      //                     await Share.shareFiles([path],
-      //                         text:
-      //                             '${title} "\n${slugCtegory}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
-      //                     // Share.share(
-      //                     //     "${widget.title}" + "\nअ
-      //                     //भी डाउनलोड करे " + playStoreUrl + "");
-      //                   },
-      //                   icon: Icon(
-      //                     FontAwesomeIcons.shareNodes,
-      //                     color: Colors.blue,
-      //                     size: 20,
-      //                   ),
-      //                 ),
-      //                 SizedBox(
-      //                   width: 10,
-      //                 ),
-      //                 Icon(
-      //                   FontAwesomeIcons.bookmark,
-      //                   color: Colors.blue,
-      //                   size: 20,
-      //                 ),
-      //               ],
-      //             ),
-      //           )
-      //         ],
-      //         // centerTitle: true,
-      //       )
-      //     : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
       body: _loading
           ? Center(
               child: Container(
@@ -215,8 +93,12 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 children: [
                   PageView.builder(
-                    // scrollBehavior: ScrollBehavior(),
                     itemCount: newsList.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _isShowfooter = !_isShowfooter;
+                      });
+                    },
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
                       if (count < 4) {
@@ -237,7 +119,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-      // bottomNavigationBar: customBottamBar(),
     );
   }
 
@@ -451,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left: 60, top: 10),
+                  padding: EdgeInsets.only(left: 40, top: 10),
                   child: Column(
                     children: [
                       Text(
@@ -473,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left: 70, top: 10),
+                  padding: EdgeInsets.only(left: 60, top: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -504,10 +385,18 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: 10,
                       ),
-                      Icon(
-                        FontAwesomeIcons.bookmark,
-                        color: Colors.blue,
-                        size: 20,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BookMarkPage()));
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.bookmark,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
                       ),
                     ],
                   ),

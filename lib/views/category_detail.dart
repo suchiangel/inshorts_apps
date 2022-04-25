@@ -79,129 +79,6 @@ class _CategoryNewsState extends State<CategoryNews> {
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBody: true,
-      // appBar: _isShowfooter
-      //     ? AppBar(
-      //         backgroundColor: Colors.white,
-      //         elevation: 0,
-      //         leadingWidth: 10,
-      //         leading: Container(
-      //             margin: const EdgeInsets.only(left: 3.0),
-      //             width: 150,
-      //             height: screenHeight,
-      //             child: IconButton(
-      //               onPressed: () {
-      //                 Navigator.push(
-      //                     context,
-      //                     MaterialPageRoute(
-      //                         builder: (context) => const DiscoverPage()));
-      //               },
-      //               icon: const Icon(
-      //                 Icons.arrow_back_ios,
-      //                 size: 18,
-      //                 color: Colors.blue,
-      //               ),
-      //             )),
-      //         automaticallyImplyLeading: false,
-      //         title: Padding(
-      //           padding: const EdgeInsets.only(right: 20.0),
-      //           child: Container(
-      //             margin: const EdgeInsets.only(
-      //               right: 10,
-      //             ),
-      //             width: screenWidth,
-      //             child: Row(
-      //               children: [
-      //                 GestureDetector(
-      //                   onTap: () {
-      //                     Navigator.push(
-      //                         context,
-      //                         MaterialPageRoute(
-      //                             builder: (context) => const DiscoverPage()));
-      //                   },
-      //                   child: Container(
-      //                     child: const Text(
-      //                       "Discover",
-      //                       style: TextStyle(
-      //                         color: Colors.black87,
-      //                         fontSize: 15,
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ),
-      //                 Container(
-      //                   alignment: Alignment.center,
-      //                   margin: const EdgeInsets.only(left: 65),
-      //                   child: Column(
-      //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //                     crossAxisAlignment: CrossAxisAlignment.center,
-      //                     children: [
-      //                       const Text(
-      //                         "My Feed",
-      //                         style: TextStyle(
-      //                             color: Colors.black87,
-      //                             fontSize: 15,
-      //                             fontWeight: FontWeight.w500),
-      //                       ),
-      //                       const SizedBox(
-      //                         height: 5,
-      //                       ),
-      //                       Container(
-      //                         width: 30,
-      //                         height: 3,
-      //                         color: Colors.blue,
-      //                       )
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ),
-      //         actions: [
-      //           Container(
-      //             margin: const EdgeInsets.symmetric(horizontal: 15),
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //               children: [
-      //                 IconButton(
-      //                   onPressed: () async {
-      //                     final imageUrl = '${image}';
-      //                     final uri = Uri.parse(imageUrl);
-      //                     final response = await http.get(uri);
-      //                     final bytes = response.bodyBytes;
-      //                     final temp = await getTemporaryDirectory();
-      //                     final path = '${temp.path}/image.jpg';
-      //                     log('IMAhgsfds===>   $path');
-      //                     log(imageUrl);
-      //                     File(path).writeAsBytesSync(bytes);
-      //                     await Share.shareFiles([path],
-      //                         text:
-      //                             '${title} "\n${image}" \n*ताजा खबरे सबसे पहले पाने के लिए नीचे क्लिक कर ASB News India एप इंस्टॉल करे*  "\n" ');
-      //                     // Share.share(
-      //                     //     "${widget.title}" + "\nअ
-      //                     //भी डाउनलोड करे " + playStoreUrl + "");
-      //                   },
-      //                   icon: Icon(
-      //                     FontAwesomeIcons.shareNodes,
-      //                     color: Colors.blue,
-      //                     size: 20,
-      //                   ),
-      //                 ),
-      //                 SizedBox(
-      //                   width: 10,
-      //                 ),
-      //                 Icon(
-      //                   FontAwesomeIcons.bookmark,
-      //                   color: Colors.blue,
-      //                   size: 20,
-      //                 ),
-      //               ],
-      //             ),
-      //           )
-      //         ],
-      //         // centerTitle: true,
-      //       )
-      //     : PreferredSize(child: Container(), preferredSize: Size(0.0, 0.0)),
       body: _loading
           ? Center(
               child: Container(
@@ -214,8 +91,10 @@ class _CategoryNewsState extends State<CategoryNews> {
               child: Stack(
                 children: [
                   PageView.builder(
-                    // scrollBehavior: ScrollBehavior(),
                     itemCount: categoryDetailsList.length,
+                    onPageChanged: (value) {
+                      _isShowfooter = !_isShowfooter;
+                    },
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
                       if (count < 4) {
@@ -228,7 +107,6 @@ class _CategoryNewsState extends State<CategoryNews> {
                         // _showInterstitialAd();
                         // _createInterstitialAd();
                         return bannerAdWidget();
-                        // return bannerAdWidget();
                       }
                     },
                   ),
@@ -392,7 +270,7 @@ class _CategoryNewsState extends State<CategoryNews> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left: 80, top: 10),
+                  padding: EdgeInsets.only(left: 50, top: 10),
                   child: Column(
                     children: [
                       Text(
